@@ -1,29 +1,38 @@
-<h1>Listing microposts</h1>
-
-<table>
+<%- model_class = Micropost -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => Micropost %></h1>
+</div>
+<table class="table table-striped">
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Body</th>
-      <th>User</th>
-      <th colspan="3"></th>
+      <th>ID</th>
+      <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:body) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
-
   <tbody>
     <% @microposts.each do |micropost| %>
       <tr>
+        <td><%= micropost.id %></td>
         <td><%= micropost.title %></td>
         <td><%= micropost.body %></td>
-        <td><%= micropost.user %></td>
-        <td><%= link_to 'Show', micropost %></td>
-        <td><%= link_to 'Edit', edit_micropost_path(micropost) %></td>
-        <td><%= link_to 'Destroy', micropost, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%=l micropost.created_at, format: :long %></td>
+        <td>
+          <%= link_to micropost_path(micropost), :class => 'btn btn-xs', :title => "#{ t('.show', :default => t('helpers.links.show')) }" do %>
+            <%= glyph 'info-sign' %>
+            <%= glyph 'pencil' %>
+          <%- end -%>
+          <%= link_to micropost_path(micropost), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs', :title => "#{ t('.destroy', :default => t('helpers.links.destroy')) }" do %>
+            <%= glyph 'remove' %>
+          <%- end -%>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Micropost', new_micropost_path %>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_micropost_path,
+            :class => 'btn btn-primary' %>
